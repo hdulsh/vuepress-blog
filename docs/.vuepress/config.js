@@ -139,7 +139,7 @@ module.exports = {
       owner: 'hdulsh',
       repo: 'vuepress-blog',
       clientId: '4a887f30a4b172f458a7',
-      clientSecret: '03809354717faf74bea2d4c146d285ade3334525',
+      clientSecret: '0f04bbdfeacc722bc4e42f1c0c225246f9e1d23c'
     }
   },
 }
