@@ -1,5 +1,5 @@
 ---
-title: 你不知道的javascript(中)类型
+title: 你不知道的javascript中类型
 date: 2020-03-09
 tags:
  - 类型 
