@@ -2,3 +2,37 @@
     .page-title
         max-width: 860px !important 
     
+.content__default code 
+    color: #F44336 !important
+
+.content__default pre[class*="language-"] code 
+    color: white !important
+a.header-anchor
+    opacity: 1 !important
+.navbar .logo
+    height: 2.5rem
+    min-width: 2.5rem
+    border-radius: 50%;
+    transition: all .5s;
+    box-shadow: 0 0 6px 0.5px #9e9e9e;
+    &:hover
+      transform: rotate(360deg)
+
+.home-blog .hero h1
+    font-family 'Gloria Hallelujah'
+    font-weight 300
+    font-size 5rem !important
+    margin: 10rem auto 1.8rem !important
+ 
+.home-blog .hero .description
+    font-family 'Gloria Hallelujah'
+    font-weight 400
+    font-size 1.5rem !important
+
+@media (max-width: $MQMobileNarrow)
+    .home-blog .hero 
+        height 60vh !important
+        h1
+            font-size 30px !important
+        .description
+            font-size 18px !important

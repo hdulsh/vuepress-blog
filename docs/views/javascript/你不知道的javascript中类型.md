@@ -1,5 +1,5 @@
 ---
-title: 你不知道的javascript中类型
+title: 你不知道的javascript(中)类型
 date: 2020-03-09
 tags:
  - 类型 
@@ -7,7 +7,7 @@ tags:
  - 强制类型转换
  - 你不知道的javascript
 categories:
- -  JavaScript
+ - JavaScript
 sidebar: auto
 ---
 

@@ -11,7 +11,7 @@ home: true
 # }
 bgImage: 'https://resource.limeili.co/bg.jpg'
 bgImageStyle: {
-  height: '650px'
+  height: 'calc(100vh - 3.6rem)'
 }
 isShowTitleInHome: false
 actionText: Guide
