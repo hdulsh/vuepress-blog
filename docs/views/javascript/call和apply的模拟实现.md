@@ -9,7 +9,7 @@ categories:
 sidebar: auto
 ---
 >[深度解析 call 和 apply 原理、使用场景及实现](https://muyiy.cn/blog/3/3.3.html#call-%E5%92%8C-apply)
-## 使用场景
+
 ```js
 var func = function(arg1, arg2) {
      ...
@@ -18,9 +18,9 @@ var func = function(arg1, arg2) {
 func.call(this, arg1, arg2); // 使用 call，参数列表
 func.apply(this, [arg1, arg2]) // 使用 apply，参数数组
 ```
-### 使用场景
+## 使用场景
 1. 合并两个数组
-`Array.prototype.push.apply(arr1, arr2)`
+`Array.prototype.push.apply(arr1, arr2)`或`[].push.apply(arr1, arr2)`
 2. 获取数组中的最大值和最小值
 ```js
 var numbers = [5, 458 , 120 , -215 ]; 
@@ -279,3 +279,4 @@ Function.prototype.apply = function (context, arr) {
     return result;
 }
 ```
+

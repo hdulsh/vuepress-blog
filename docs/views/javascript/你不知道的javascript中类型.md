@@ -1,5 +1,5 @@
 ---
-title: 你不知道的javascript(中)类型
+title: 《你不知道的javascript(中)》类型
 date: 2020-03-09
 tags:
  - 类型 
@@ -492,6 +492,7 @@ JSON.stringify( "42" ); // ""42"" （含有双引号的字符串）
 JSON.stringify( null ); // "null"
 JSON.stringify( true ); // "true"
 ```
+<span id="json"> </span>
 
 `不安全的Json值`：undefined、function、symbol
 （ES6+）和包含循环引用（对象之间相互引用，形成一个无限循环）

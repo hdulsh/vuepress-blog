@@ -240,7 +240,8 @@ Function.prototype.bind2 = function (context) {
 1. `注释1`  
 
 当作为构造函数时，this 指向实例，此时 this instanceof fBound 结果为 true，可以让实例获得来自绑定函数的值，即上例中实例会具有 habit 属性。  
-当作为普通函数时，this 指向 window，此时结果为 false，将绑定函数的 this 指向 context
+当作为普通函数时，this 指向 window，此时结果为 false，将绑定函数的 this 指向 context  
+
 2. `注释2`  
 
 修改返回函数的 prototype 为绑定函数的 prototype，实例就可以继承绑定函数的原型中的值，即上例中 obj 可以获取到 bar 原型上的 friend。
@@ -334,4 +335,24 @@ Function.prototype.bind2 = function (context) {
     fBound.prototype = new fNOP();
     return fBound;
 }
+```
+
+## 问题
+```js
+// 1、赋值语句是右执行的,此时会先执行右侧的对象
+var obj = {
+    // 2、say 是立即执行函数
+    say: function() {
+        function _say() {
+            // 5、输出 window
+            console.log(this);
+        }
+        // 3、编译阶段 obj 赋值为 undefined
+        console.log(obj);
+        // 4、obj是 undefined，bind 本身是 call实现，
+        // 【进阶3-3期】：call 接收 undefined 会绑定到 window。
+        return _say.bind(obj);
+    }(),
+};
+obj.say();
 ```
