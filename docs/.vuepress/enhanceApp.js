@@ -1,5 +1,6 @@
 import './styles/font.css'
 import './styles/valine.styl'
+import './styles/iconfont.js'
 
 export default ({
   Vue, // VuePress 正在使用的 Vue 构造函数
