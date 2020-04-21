@@ -4,7 +4,7 @@ body
 .icon {
   width: 1.2em;
   height: 1.2em;
-  vertical-align: -0.15em;
+  vertical-align: -0.20em;
   fill: currentColor;
   overflow: hidden;
 }
@@ -45,11 +45,15 @@ a.header-anchor
 .abstract p img
     height 450px
     width 100%
-@media (max-width: $MQMobileNarrow)
+@media (max-width: $MQMobile)
     .home-blog .hero 
         display none
         .des
             display: none
     .abstract p img
-        height 200px
+        height 250px
         width 100%
+@media (max-width: $MQMobileNarrow)
+  .content__default
+    div[class*="language-"]
+      margin 0.85rem -.5rem !important
