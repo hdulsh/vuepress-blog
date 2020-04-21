@@ -7,7 +7,8 @@ categories:
  - JavaScript
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(5).jpg)
+<!-- more -->
 ## 调用位置
 
 寻找调用位置就是寻找“函数被调用的位置”，最重要的是要分析`调用栈（就是为了到达当前执行位置所调用的所有函数）`。我们关心的 **调用位置就在当前正在执行的函数的前一个调用中**  

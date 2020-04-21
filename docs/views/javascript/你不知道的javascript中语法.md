@@ -8,7 +8,8 @@ categories:
 sidebar: auto
 ---
 
-
+![](https://resource.limeili.top/abstract/abstract%20(7).jpg)
+<!-- more -->
 ## 语句和表达式
 JavaScript 中表达式可以返回一个结果值,3 * 6 是一个表达式（结果为 18）。第二行的 a 也是一个表达式，第三行的 b 也是。
 表达式 a 和 b 的结果值都是 18

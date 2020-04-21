@@ -7,7 +7,8 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(4).jpg)
+<!-- more -->
 ## 作用域
 **要一套设计良好的规则来存储变量，并且之后可以方便地找到这些变量。 这套规则被称为作用域**
 ### 编译原理

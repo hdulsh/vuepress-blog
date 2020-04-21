@@ -11,7 +11,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.co/image/201909051851.jpg!imgabstract)
+![](https://resource.limeili.top/abstract/abstract%20(18).jpg)
 <!-- more -->
 
 ## 什么是VNode

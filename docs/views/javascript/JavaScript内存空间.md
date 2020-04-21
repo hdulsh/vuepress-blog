@@ -7,7 +7,8 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(11).jpg)
+<!-- more -->
 ## 栈数据结构
 栈的结构就是`后进先出`**（LIFO）**，
 

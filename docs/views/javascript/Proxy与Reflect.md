@@ -9,7 +9,8 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(13).jpg)
+<!-- more -->
 ## Proxy
 Proxy是一种元编程即对编程语言的编程，在目标对象之前假设一层拦截可以对外界的访问进行过滤和改写，代理，拦截Js中默认行为
 `var proxy = new Proxy(target , handle)`

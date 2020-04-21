@@ -9,7 +9,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.co/image/201910041807.png!imgabstract)
+![](https://resource.limeili.top/abstract/abstract%20(20).jpg)
 <!-- more -->
 
 ## 生命周期

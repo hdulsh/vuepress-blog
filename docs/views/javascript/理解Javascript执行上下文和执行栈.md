@@ -10,7 +10,8 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(2).jpg)
+<!-- more -->
 ## 什么是执行上下文
 
 简而言之，执行上下文就是当前 JavaScript 代码被解析和执行时所在环境的抽象概念， JavaScript 中运行任何的代码都是在执行上下文中运行。

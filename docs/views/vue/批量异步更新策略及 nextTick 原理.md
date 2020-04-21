@@ -8,7 +8,8 @@ categories:
  - VUE
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(14).jpg)
+<!-- more -->
 ## 为什么要异步更新
 
 假设我们有如下这么一种情况。

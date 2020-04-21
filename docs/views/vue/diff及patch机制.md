@@ -11,9 +11,8 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.co/image/201909051851.jpg!imgabstract)
+![](https://resource.limeili.top/abstract/abstract%20(16).jpg)
 <!-- more -->
-
 
 
 ## 源码diff调用逻辑

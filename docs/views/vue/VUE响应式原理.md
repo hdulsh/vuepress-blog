@@ -14,7 +14,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://blog-1257601889.cos.ap-shanghai.myqcloud.com/vue/vue-mvvm-jiagou.png)
+![](https://resource.limeili.top/abstract/abstract%20(21).jpg)
 <!-- more -->
 
 ## MVVM

@@ -10,7 +10,8 @@ categories:
  - JavaScript
 sidebar: auto
 ---
-
+![](https://resource.limeili.top/abstract/abstract%20(6).jpg)
+<!-- more -->
 ## 类型
 
 七种内置类型:

@@ -9,6 +9,9 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
+![](https://resource.limeili.top/abstract/abstract%20(9).jpg)
+<!-- more -->
+
 >[深度解析bind原理、使用场景及模拟实现](https://muyiy.cn/blog/3/3.4.html#bind)
 
 
