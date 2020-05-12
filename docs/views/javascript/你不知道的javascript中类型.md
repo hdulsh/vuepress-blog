@@ -22,7 +22,22 @@ sidebar: auto
 * undefined
 * object
 * symbol
+***
+***
+***
+***
+2020-05-12增  
+  
+**7+2**  
+基本类型：number string boolean null undefined symbol bigint  
 
+引用类型：  
+* object(细分为普通对象、数组对象、正则对象、日期对象、Math....)
+* function (为什么单独分出来因为_proto_ 是Function.prototype)
+***
+***
+***
+***
 1. 除对象外其他的称为 **基本类型** ，可以使用 typeof 运算符来查看 typeof null === "object"
 
 ::: tip
@@ -63,7 +78,16 @@ if (typeof DEBUG !== "undefined") {
 }
 ```
 经常会判断一个变量是否存在然后再使用，但是如果这个变量未声明就会报错,通过 typeof 的安全防范机制（阻止报错）来检查 undeclared 变量，有时是个不错的办法
-
+### 类型检测
+1. typeof 检测数据类型的逻辑运算符
+2. instanceof 检测是否为某个类的实例
+3. constructor 检测构造函数
+4. Object.prototype.toString.call 检测数据类型的
+`typeof`的返回结果都是字符串，局限性是一是null -> "object"，二是不能细分对象类型（普通对象或是数组对象都是Object）
+`题` 
+```js
+typeof typeof typeof [1,2,3] // "string"
+```
 ## 值
 
 ### 数组
@@ -134,8 +158,9 @@ var c = a
 null 是一个特殊关键字，不是标识符，我们不能将其当作变量来使用和赋值。然而undefined 却是一个标识符，可以被当作变量来使用和赋值
 
 #### 特殊的数字
+**`Nan`和`无穷数`都属于number类型**  
 1. `NaN`指‘不是一个数字’，将它理解为“无效数值”“失败数值”或者“坏数值”可能更准确些。
-NaN 是一个特殊值，它和自身不相等，是唯一一个非自反（即 x === x 不成立）的值。而 NaN != NaN 为 true，
+NaN 是一个特殊值，它和谁都不相等包括自身也不相等，是唯一一个非自反（即 x === x 不成立）的值。而 NaN != NaN 为 true，
 用` Number.isNaN(..)`
 2. 无穷数
 ```js
@@ -681,15 +706,56 @@ parseInt( a ); // 42
 Number( b ); // NaN
 parseInt( b ); // 42
 ```
-解析允许字符串中含有非数字字符，解析按从左到右的顺序，如果遇到非数字字符就停止。而转换不允许出现非数字字符，否则会失败并返回 NaN。
+**解析允许字符串中含有非数字字符，解析按从左到右的顺序，如果遇到非数字字符就停止。而转换不允许出现非数字字符，否则会失败并返回 NaN。**
 解析和转换之间不是相互替代的关系。它们虽然类似，但各有各的用途。如果字符串右边的非数字字符不影响结果，就可以使用解析。而转换要求字符串中所有的字符都是数字，像 "42px" 这样的字符串就不行。
 
 不要忘了 parseInt(..) 针对的是字符串值。向 parseInt(..) 传递数字和其他类型的参数是没有用的，比如 true、function(){...} 和 [1,2,3]。
-非字符串参数会首先被强制类型转换为字符串，依赖这样的隐式强制类型
+**非字符串参数会首先被强制类型转换为字符串**，依赖这样的隐式强制类型
 转换并非上策，应该避免向 parseInt(..) 传递非字符串参数。
 parseInt( 1/0, 19 ); // 18
+***
+***
+***
+***
+2020-05-12 增  
+#### 把其他类型转换为数字的方法
+* 强转换（基于底层级制转换）`Number([value])`
+  * 一些隐式的转换都是基于Number完成的
+    * isNaN('12px')先把其他类型值转换为数字再检测
+    * 数学运算 '12px'-13
+    * 字符串==数字 两个等号比较很多时候是要把其他值转换成数字
+* 弱转换（基于一些额外的方法转换） `parseInt([value])` `parseFloat([value])`
+`题`
+```js
+//parseInt 处理的值是字符串，从字符串的左侧开始查找有效数字字符，遇到非有效的停止查找
+//如果处理的值不是字符串，需要先转换为字符串
+//Number 是直接调用浏览器最底层的数据类型检测机制来完成
+// true-1 false-0 null-0 undefind-NaN 字符串中必须保证都是有效数字才会转换为数字，否则都是NaN
+parseInt('') // NaN
+Number('') //0
+isNaN('') //先把''转换成数字（隐式 Number） isNaN（0） false
+parseInt(null) //NaN parseInt('null')
+Number(null) //0
+isNaN(null)//false
+parseInt('12px')//12
+Number('12px')//NaN
+isNaN('12px')//true
+parseFloat('1.6px')+parseInt('1.2px')+ typeof parseInt(null) //'2.6number'  1.6+1+ typeof(NaN)  
+isNaN(Number(!!Number(parseInt('0.8')))) //false
+typeof !parseInt(null) + !isNaN(null)// 'booleantrue'
 
-
+```
+***
+***
+***
+***
+`题`
+```js
+ let res = parseFloat('left:200px')
+ if(res===200){alert(200)}
+ else if(res===NaN){alert(NaN)}
+ eles if(typeof res==='number'){alert('number')} // 'number'
+```
 #### 显示转换为布尔值
 与前面的 String(..) 和 Number(..) 一样，Boolean(..)（不带 new）是显式的 ToBoolean 强
 制类型转换，虽然 Boolean(..) 是显式的，但并不常用
@@ -749,6 +815,9 @@ true + true // 2
 ```js
 let result = 1+null+true+undefined+'Tencent'+false+[]+undefined+null;
 console.log(result); //"NaNTencentfalseundefinednull"
+
+let result = 10+ false + undefind + [] +'Tencent'+null +true +{}
+//'NaNTencentnulltrue[object object]'
 
 console.log([]==false); //true
 console.log(![]==false); //true
@@ -920,7 +989,16 @@ ES5 规范 11.9.3 节的“抽象相等比较算法”定义了 == 运算符的�
 有几个非常规的情况需要注意。
 • NaN 不等于 NaN
 • +0 等于 -0
+***
+***
+2020-05-20 增
+**==规律**  
 
+1. 对象= 字符串 对象转化为字符串
+2. null==undefind 但和其他值都不相等
+3. 剩下两边不同都是转换为数字
+***
+***
 1. 字符串和数字之间的相等比较
 ```js
 var a = 42;
