@@ -33,7 +33,45 @@ sidebar: auto
 
 引用类型：  
 * object(细分为普通对象、数组对象、正则对象、日期对象、Math....)
-* function (为什么单独分出来因为_proto_ 是Function.prototype)
+* function (为什么单独分出来因为_proto_ 是Function.prototype)  
+
+**对象的属性名一定不能是引用类型值，默认会把引用类型值转换为字符串进行处理**
+```js
+let a = {
+  x: 100
+}
+let b = function fn() {
+  let a = 100
+}
+let obj = {
+  0: 100,
+  true: '小可爱'
+}
+obj[a] = 1000
+obj[b] = 2000
+//输出obj
+//{0: 100, true: "小可爱", [object Object]: 1000, "function fn() {↵  let a = 100↵}": 2000}
+//0: 100
+//true: "小可爱"
+//[object Object]: 1000
+//"function fn() {↵ let a = 100↵}": 2000
+```
+```js
+let a = {
+  x: 100
+}
+let b = {
+  y: 200
+}
+let obj = {}
+obj[a] = '可可' //=>obj["[object Object]"] = '可可'
+obj[b] = '爱爱' //=>obj["[object Object]"] = '爱爱'
+console.log(obj[a]=== obj[b]) // true
+//输出obj
+//{[object Object]: "爱爱"}
+//[object Object]: "爱爱"
+
+```
 ***
 ***
 ***
@@ -817,7 +855,7 @@ let result = 1+null+true+undefined+'Tencent'+false+[]+undefined+null;
 console.log(result); //"NaNTencentfalseundefinednull"
 
 let result = 10+ false + undefind + [] +'Tencent'+null +true +{}
-//'NaNTencentnulltrue[object object]'
+//'NaNTencentnulltrue[object Object]'
 
 console.log([]==false); //true
 console.log(![]==false); //true
