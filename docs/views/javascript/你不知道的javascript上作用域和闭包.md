@@ -3,6 +3,7 @@ title: 《你不知道的javascript(上)》作用域和闭包
 date: 2020-03-09
 tags:
  - 你不知道的javascript
+ - 变量提升
 categories:
  -  JavaScript
 sidebar: auto
@@ -180,12 +181,15 @@ console.log( err ); // ReferenceError: err not found
 4. const
 
 ## 提升
-* `函数声明`和`变量声明`都会被提升
+* `函数声明`和`变量声明`都会被提升（在当前执行上下文代码执行之前，首先会把所有带var或者function关键字的声明或者定义（带var的只是提前声明，带function会提前的声明+定义））
 * 函数会首先被提升，然后才是变量
 * 后面的函数声明可以覆盖前面的
 * 一个普通块内部的函数声明通常会被提升到所在作用域的顶部  
 `变量提升的原因`
 :point_right: [点击这里](../javascript/理解Javascript执行上下文和执行栈.md) :point_left:
+  
+
+
 
 ```js
 foo(); // "b"
