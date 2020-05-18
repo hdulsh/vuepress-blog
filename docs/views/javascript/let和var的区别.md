@@ -1,5 +1,5 @@
 ---
-title: let/var/const区别
+title: 变量提升和let/var/const区别
 date: 2020-05-15
 tags:
  - 变量提升
@@ -84,9 +84,37 @@ fn();
 		function fn(){ console.log(5); }
 		fn(); //=>3 */
 ```
-
+### 条件判断下的变量提升
+在当前作用域下不管条件是否成立都要进行变量提升，  
+带var的还是只声明  
+带Function的在老版本浏览器的渲染机制下，声明和定义都处理，但是为了迎合es6中的块作用域，新版本浏览器对于函数（在条件判断中的函数）不管条件是否成立，都只是先声明，没有定义 类似于var
+```js
+console.log(fn) =>undefined
+if(1===1){
+    console.log(fn) =>函数本身 当条件成立，进入到判断体中（es6中他是一个会计作用域）第一件事并不是代码执行，而是类似于变量提升，先把fn声明和定义了，也就是判断体中代码执行之前，fn就已经赋值了
+    function fn(){console.log(0)}
+}
+console.log(fn) =>函数本身
+```
+### 变量提升重名的处理
+1. 带var和function关键字声明相同的名字，这种也算是重名了（其实是一个fn，只是存储值的类型不一样）
+2. 如果名字重复了，不会重新的声明，但是会重新定义（重新赋值）[不管是变量提升还是代码执行阶段皆是如此]
+```js
+fn()//4
+function fn(){console.log(1)}
+fn()//4
+function fn(){console.log(2)}
+fn()//4
+var fn = 100
+fn()// Uncaught TypeError: fn is not a function
+    
+function fn(){console.log(3)}
+fn()
+function fn(){console.log(4)}
+fn()
+```
 ## 全局对象GO
-全局变量对象VO(G)中声明的变量（用var声明的），也会给全局对象GO中增加一个对应的属性；但是用let声明的变量不存在这个特点
+全局变量对象VO(G)中声明的变量（用var声明的），也会给全局对象GO中增加一个对应的属性；但是用let声明的变量不存在这个特点 ,切断了全局变量和window属性的映射机制
 ```js
 var x = 12;
 console.log(window.x); //=>12
@@ -129,6 +157,35 @@ function fn() {
 	let x = 13; //Uncaught SyntaxError: Identifier 'x' has already been declared 只输出了这一行 说明还没有执行代码在编译阶段就报错了声明了两个 x
 	console.log(x);
 ```
+在相同的作用域中，基于let不能声明相同名字的变量，不管用什么方式在当前作用域下声明了变量，再次使用let创建都会报错  
+虽然没有变量提升机制，但是再当前作用域代码自上而下执行之前，浏览器会做一个重复性检测（语法检测），自上而下查找当前作用域下的所有变量，一旦发现有重复的，直接抛出异常，代码也不再执行了
+```js
+b=12
+console.log(b) // 12
+
+
+a=12  //a is not define
+console.log(a)
+let a = 13
+console.log(a) 
+```
+```js
+let a = 10
+    b = 10
+let fn = function (){
+    //console.log(a,b) // a is not define
+	// 为什么到这一行直接报错 因为浏览器重复性检测发现
+	//a是es6的语法只能在声明之后用
+    let a = b = 20
+    //let a =20 
+    //b=20  把全局中的b =20
+    console.log(a,b)  // 20 20 
+} 
+fn()
+console.log(a,b) // 10 20
+```
+
+
 ## 块级作用域
 ### 循环闭包处理
 ```js
@@ -242,13 +299,15 @@ function fn() {
 ## 暂时性死区
 ```js
 
-	    console.log(typeof a); //=>undefined  JS的暂时性死区（暂时没解决的BUG）
+	    console.log(typeof a); //=>undefined 在原有浏览器的渲染机下，基于typeof等逻辑运算符检测一个未被声明过的变量不会报错 返回undefined ， JS的暂时性死区（暂时没解决的BUG）
 
 
 
 		console.log(typeof a); //=>Uncaught ReferenceError: Cannot access 'a' before initialization
 		let a;
+	    //es6解决了浏览器暂时性死区的问题
 ```
+如果当前变量是基于ES6语法处理，在没有声明这个变量的时候 用typeof检测会直接报错 不会是undefined 解决了浏览器暂时性死区的问题(其实就是浏览器的bug)
 
 
 ## let和const区别
