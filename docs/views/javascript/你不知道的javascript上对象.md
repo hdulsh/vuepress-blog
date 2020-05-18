@@ -8,7 +8,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.top/abstract/abstract%20(3).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(3).jpg)
 <!-- more -->
 ## 对象
 ### 属性描述符

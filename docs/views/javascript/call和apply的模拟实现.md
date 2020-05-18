@@ -9,7 +9,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.top/abstract/abstract%20(10).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(10).jpg)
 <!-- more -->
 >[深度解析 call 和 apply 原理、使用场景及实现](https://muyiy.cn/blog/3/3.3.html#call-%E5%92%8C-apply)
 

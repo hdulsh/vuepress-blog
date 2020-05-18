@@ -7,7 +7,7 @@ categories:
  - JavaScript
 sidebar: auto
 ---
-![](https://resource.limeili.top/abstract/abstract%20(5).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(5).jpg)
 <!-- more -->
 ## 调用位置
 

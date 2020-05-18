@@ -8,7 +8,7 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-![](https://resource.limeili.top/abstract/abstract%20(4).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(4).jpg)
 <!-- more -->
 ## 作用域
 **要一套设计良好的规则来存储变量，并且之后可以方便地找到这些变量。 这套规则被称为作用域**
@@ -20,7 +20,7 @@ sidebar: auto
 `var a = 2;`   。这段程序通常会被分解成 为下面这些词法单元：`var、a、=、2 、;`
 2. 解析/语法分析（Parsing）
 将词法单元转换成`抽象语法树AST`
-![](https://resource.limeili.top/image/20200316150331.png)
+![](https://resource.limeili.co/image/20200316150331.png)
 3. 代码生成
 简单来说就是有某种方法可以将 var a = 2; 的 AST 转化为一组机器指 令，用来创建一个叫作 a 的变量（包括分配内存等），并将一个值储存在 a 中
 
@@ -205,7 +205,10 @@ function foo() { console.log("b"); } }
 
 **当函数可以记住并访问所在的词法作用域时，就产生了闭包，即使函数是在当前词法作用 域之外执行**
 `js高级的解释是`有权访问另一个函数作用域中的变量的函数
-`js权威的解释是`从技术角度上讲，所有js函数都是闭包，他们都是对象，都关联到作用域链
+`js权威的解释是`从技术角度上讲，所有js函数都是闭包，他们都是对象，都关联到作用域链  
+`闭包`
+* 函数执行形成一个私有的作用域，保护里面的私有变量不受外界干扰，这种保护机制称之为闭包  
+* 市面上的开发者认为的闭包是形成一个不销毁的私有作用域(私有栈内存)才是闭包
 
 ```js
 function foo() {

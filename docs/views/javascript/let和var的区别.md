@@ -7,7 +7,7 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-![](https://resource.limeili.top/abstract/abstract%20(23).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(23).jpg)
 <!-- more -->
 ## 变量提升
 

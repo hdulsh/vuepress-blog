@@ -10,7 +10,7 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-![](https://resource.limeili.top/abstract/abstract%20(2).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(2).jpg)
 <!-- more -->
 ## 什么是执行上下文
 
@@ -51,7 +51,7 @@ first();
 console.log('Inside Global Execution Context');
 
 ```
-![](https://resource.limeili.top/image/202003171357.png)
+![](https://resource.limeili.co/image/202003171357.png)
 
 ```js
 function fun3() {

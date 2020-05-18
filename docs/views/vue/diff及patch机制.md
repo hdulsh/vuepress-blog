@@ -11,7 +11,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.top/abstract/abstract%20(16).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(16).jpg)
 <!-- more -->
 
 

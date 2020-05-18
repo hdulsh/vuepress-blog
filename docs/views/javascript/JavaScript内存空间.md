@@ -7,7 +7,7 @@ categories:
  -  JavaScript
 sidebar: auto
 ---
-![](https://resource.limeili.top/abstract/abstract%20(11).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(11).jpg)
 <!-- more -->
 ## 栈数据结构
 栈的结构就是`后进先出`**（LIFO）**，
@@ -18,7 +18,7 @@ sidebar: auto
 
 ## 队列
 队列是一种`先进先出`**（FIFO）**的数据结构，这是事件循环（Event Loop）的基础结构
-![](https://resource.limeili.top/image/202003231514.jpg)
+![](https://resource.limeili.co/image/202003231514.jpg)
 
 ## 变量的存放
 1. 基本类型 --> 保存在栈内存中，因为这些类型在内存中分别占有固定大小的空间，通过按值来访问。基本类型一共有6种：Undefined、Null、Boolean、Number 、String和Symbol

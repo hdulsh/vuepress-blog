@@ -12,7 +12,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.top/abstract/abstract%20(19).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(19).jpg)
 <!-- more -->
 
 ## 全局概览

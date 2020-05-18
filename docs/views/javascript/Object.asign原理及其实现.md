@@ -7,7 +7,7 @@ categories:
 sidebar: auto
 ---
 
-![](https://resource.limeili.top/abstract/abstract%20(12).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(12).jpg)
 <!-- more -->
 >[Object.asign原理及其实现](https://muyiy.cn/blog/4/4.2.html)
 

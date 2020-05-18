@@ -9,7 +9,7 @@ categories:
  - VUE
 sidebar: auto
 ---
-![](https://resource.limeili.top/abstract/abstract%20(17).jpg)
+![](https://resource.limeili.co/abstract/abstract%20(17).jpg)
 <!-- more -->
 
 ## 一些基本概念
