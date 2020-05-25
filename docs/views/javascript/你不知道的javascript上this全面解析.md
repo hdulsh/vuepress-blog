@@ -546,3 +546,299 @@ personA.show4().call(personB) // personA，箭头函数绑定，call并没有改
 personA.show4.call(personB)() // personB，解析同题目1，最后是箭头函数绑定，
 							  // this指向外层作用域，即改变后的person2函数作用域
 ```
+
+
+
+# JS中this的五种情况
+## 1.事件绑定
+给元素的某个事件行为绑定方法，事件触发，方法执行，此时方法中的THIS一般都是当前元素本身
+```js
+=>DOM0
+btn.onclick = function anonymous() {
+    console.log(this); //=>元素
+};
+=>DOM2
+btn.addEventListener('click', function anonymous() {
+    console.log(this);  //=>元素
+}, false);
+btn.attachEvent('onclick',function anonymous(){
+    // <= IE8浏览器中的DOM2事件绑定
+    console.log(this); //=>window
+});
+
+
+function fn() {	
+    console.log(this);
+}
+btn.onclick = fn //点击的时候执行fn =>元素
+btn.onclick = fn() //不用点击就执行fn把fn的结果给事件绑定 =>window
+
+btn.onclick = fn.bind(window)//=>window
+//=>fn.bind(window)首先会返回一个匿名函数(AM),把AM绑定给事件；
+//点击触发执行AM，AM中的THIS是元素，但是会在AM中执行FN，FN中的THIS是预先指定的WINDOW
+相当于
+btn.onclick = (function (){
+			return function(){
+				fn.call(window)}
+		})()
+``` 
+
+## 2.普通函数执行
+它里面的THIS是谁，取决于方法执行前面是否有“点”，有的话，“点”前面是谁THIS就是谁，没有THIS指向WINDOW（严格模式下是UNDEFINED）
+```js
+function fn() {
+    console.log(this);
+}
+let obj = {
+    name: 'OBJ',
+    fn: fn
+};
+fn();
+obj.fn();
+console.log(obj.hasOwnProperty('name')); //=>hasOwnProperty方法中的this:obj  TRUE
+console.log(obj.__proto__.hasOwnProperty('name')); //=>hasOwnProperty方法中的this:obj.__proto__(Object.prototype)  FALSE
+console.log(Object.prototype.hasOwnProperty.call(obj, 'name')); //<=> obj.hasOwnProperty('name')
+
+/*
+    * hasOwnProperty:用来检测某个属性名是否属于当前对象的私有属性  
+    * in是用来检测是否为其属性（不论私有还是公有） 
+    * 
+    * Object.prototype.hasOwnProperty=function hasOwnProperty(){}
+    */
+console.log(obj.hasOwnProperty('name')); //=>true
+console.log(obj.hasOwnProperty('toString')); //=>false
+console.log('toString' in obj); //=>true
+```
+## 3.构造函数执行
+构造函数执行（new xxx），函数中的this是当前类的实例
+```js
+    function Fn() {
+			console.log(this);
+			//=>this.xxx=xxx 是给当前实例设置私有属性
+		}
+		let f = new Fn; //加不加()都行
+```
+## 4. 箭头函数
+箭头函数中没有自身的THIS，所用到的THIS都是其上下文中的THIS 
+*   箭头函数没有的东西很多：
+*      1.他没有prototype（也就是没有构造器），所以不能被new执行
+*      2.他没有arguments实参集合（可以基于...args剩余运算符获取）
+```js
+   let obj = {
+    name: 'OBJ',
+    fn: function () {
+           console.log(this); //=>obj
+            return function () {
+              console.log(this); 
+            };
+    } 
+};
+let ff = obj.fn();
+ff();//=>window
+
+
+想让小函数里的this也是obj
+let obj = {
+    name: 'OBJ',
+    fn: function () {
+        let _this = this; //_this=>obj 
+        return function () {
+            _this.name = "name";
+        };
+    }
+}
+let obj = {
+    name: 'OBJ',
+    fn: function () {
+        // console.log(this); //=>obj
+        return () => {
+            console.log(this); //=>obj 
+        };
+    }
+};
+let ff = obj.fn();
+ff();
+```
+```js
+let obj = {
+    name: 'OBJ',
+    fn: function () {
+        setTimeout(function() {
+            this.name = "珠峰"; //window
+        }, 1000);
+    }
+};
+obj.fn();
+
+let obj = {
+    name: 'OBJ',
+    fn: function () {
+        setTimeout(_ => {
+            this.name = "珠峰";
+        }, 1000);
+    }
+};
+obj.fn();
+```
+## 5. call/apply/bind
+基于call/apply/bind可以改变函数中this的指向（强行改变）  
+`CALL/APPLY`  
+第一个参数就是改变的THIS指向，写谁就是谁（特殊：非严格模式下，传递null/undefined指向的也是window  
+唯一区别：执行函数，传递的参数方式有区别，call是一个个的传递，apply是把需要传递的参数放到数组中整体传递  
+
+func.call([context],10,20)  
+func.apply([context],[10,20])
+`BIND`  
+call/apply都是改变this的同时直接把函数执行了，而bind不是立即执行函数，属于预先改变this和传递一些内容  =>`"柯理化"`
+### bind
+```js
+~ function anonymous (proto){
+    function bind(context){
+        //context = context|| window 不这么写因为传空字符串也是假 为window
+        if(context == undefined){//相当于不管是null还是undefined都是window 不传和传undefined都是undefined
+            context = window
+        }
+        var args= [].slice.call(arguments,1)
+        var _this= this 
+        return function anonymous(){
+            var amArgs = [].slice.call(arguements,0)
+            _this.apply(context,args.concat(amArgs))
+        }
+    }
+    proto.bind = bind
+}(Function.prototype)
+
+//用es6写
+function bind (context=window,...args){
+    return (...amArgs)=>{
+        this.apply(context,args.concat(amArgs))
+    }
+}
+//经过测试:apply的性能不如call
+function bind(context = window, ...args) {
+    return (...amArg) => 
+        this.call(context, ...args.concat(amArg)) //展开运算符的优先级是1 低
+}
+```
+### call
+```js
+~ function anonymous (proto){
+    //fn.call(obj)是把fn的this改到obj上 
+    //如果想把fn的this改到obj上
+    //相当于obj上加一个fn属性
+    //执行obj.fn =>this就变成obj了
+    function call(context=window,...args){
+        //obj.fn.call(window)
+        //this是需要执行的函数obj.fn
+        //而且call是立即执行这个函数obj.fn
+        //所以执行this()
+        context.fn = this
+        let result = context.fn(...args)
+        delete context.fn
+        return result
+    }
+  proto.call = call
+}(Function.prototype)
+```
+上面的代码必须保证context是引用类型，改进如下
+```js
+function call(context = window, ...args) {
+    context === null ? context = window : null;//因为typeof null特殊所以需要单排出来
+    //context = window这种赋值只有undefined或者不传的情况下才是window 识别不了null
+    let type = typeof context;
+    if (type !== "object" && type !== "function" && type !== "symbol") {
+        //=>基本类型值
+        switch (type) {
+            case 'number':
+                context = new Number(context);
+                break;
+            case 'string':
+                context = new String(context);
+                break;
+            case 'boolean':
+                context = new Boolean(context);
+                break;
+        }
+    }
+    context.fn = this;
+    let result = context.fn(...args);
+    delete context.fn;
+    return result;
+}
+```
+### apply
+```js
+~ function anonymous(proto){
+    function apply(context,args){
+        context.fn = this
+        let result = context.fn(...args)
+        delete context.fn
+        return result
+    }
+    proto.apply = apply
+}(Function.prototype)
+```
+
+# 题
+```js
+~ function () {
+   function call(context = window, ...args) {
+        context.$fn = this;
+        let result = context.$fn(...args);
+        delete context.$fn;
+        return result;
+    } => AAAFFF000*/
+    Function.prototype.call = call;
+}();
+
+function fn1(){console.log(1);}
+function fn2(){console.log(2);}
+fn1.call(fn2);//=>执行的是FN1 =>1
+/*
+    * call执行
+    *   this=>fn1
+    *   context=>fn2
+    *   args=>[]
+    * fn2.$fn = fn1;  fn2.$fn(...[])
+    */
+fn1.call.call(fn2); //=>执行的是Fn2 =>2
+/*
+    * 先让最后一个CALL执行
+    *   this=>fn1.call=>AAAFFF000
+    *   context=>fn2
+    *   args=>[]
+    * fn2.$fn=AAAFFF000  fn2.$fn(...[])
+    *
+    * 让CALL方法再执行
+    *    this=>fn2
+    *    context=>undefined
+    *    args=>[]
+    * undefined.$fn=fn2  undefined.$fn()
+    * 
+    * 让fn2执行
+    */
+Function.prototype.call(fn1);
+/*
+    * 先让最后一个CALL执行
+    *     this=>Function.prototype（anonymous函数）
+    *     context=>fn1
+    *     args=>[]
+    * fn1.$fn=Function.prototype   fn1.$fn()
+    * 让Function.prototype执行
+    */
+Function.prototype.call.call(fn1);
+	/*
+    * 先让最后一个CALL执行
+    *     this=>Function.prototype.call（AAAFFF000）
+    *     context=>fn1
+    *     args=>[]
+    * fn1.$fn=AAAFFF000   fn1.$fn()
+    * 
+    * 让CALL执行
+    *    this=>fn1
+    *    context=>undefined
+    *    args=>[]
+    * undefined.$fn=fn1   undefined.$fn()
+    * 让fn1执行
+    */
+```

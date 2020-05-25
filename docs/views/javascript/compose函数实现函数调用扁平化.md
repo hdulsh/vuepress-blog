@@ -69,4 +69,10 @@ let total = arr.reduce((x, y) => {
     return x + y;
 }, 0);
 console.log(total);  
+
+0 12
+12 23
+35 34
+69 45
+10 114
 ```
