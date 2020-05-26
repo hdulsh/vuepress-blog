@@ -804,27 +804,27 @@ fn1.call(fn2);//=>执行的是FN1 =>1
 fn1.call.call(fn2); //=>执行的是Fn2 =>2
 /*
     * 先让最后一个CALL执行
-    *   this=>fn1.call=>AAAFFF000
+    *   this=>fn1.call=>AAAFFF000 fn1通过原型链找到function上的call
     *   context=>fn2
     *   args=>[]
-    * fn2.$fn=AAAFFF000  fn2.$fn(...[])
+    * fn2.$fn=AAAFFF000  fn2.$fn(...[])相当于让AAAFFF000执行
     *
     * 让CALL方法再执行
     *    this=>fn2
     *    context=>undefined
     *    args=>[]
-    * undefined.$fn=fn2  undefined.$fn()
+    * undefined.$fn=fn2  undefined.$fn() 相当于让fn2执行
     * 
     * 让fn2执行
     */
 Function.prototype.call(fn1);
 /*
     * 先让最后一个CALL执行
-    *     this=>Function.prototype（anonymous函数）
+    *     this=>Function.prototype（Function.prototype是个匿名anonymous函数）
     *     context=>fn1
     *     args=>[]
     * fn1.$fn=Function.prototype   fn1.$fn()
-    * 让Function.prototype执行
+    * 让Function.prototype执行  是个匿名空函数没有返回值
     */
 Function.prototype.call.call(fn1);
 	/*
