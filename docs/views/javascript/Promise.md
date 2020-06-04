@@ -108,7 +108,8 @@ console.log(3); */
 PROMISE本身有三个状态  =>[[PromiseStatus]]
 *    pending 初始状态
 *    fulfilled 代表操作成功（resolved）
-*    rejected 代表当前操作失败
+*    rejected 代表当前操作失败  
+
 PROMISE本身有一个VALUE值，用来记录成功的结果（或者是失败的原因的） =>[[PromiseValue]]
 ```js
 let p1 = new Promise((resolve, reject) => {
@@ -128,15 +129,15 @@ p1.then基于THEN方法，存储起来两个函数（此时这两个函数还没
 当executor函数中的异步操作结束了，基于resolve/reject控制Promise状态，从
 而决定执行then存储的函数中的某一个
 let p1 = new Promise((resolve, reject) => {
-setTimeout(_ => {
-	let ran = Math.random();
-	console.log(ran);
-	if (ran < 0.5) {
-		reject('NO!');
-		return;
-	}
-	resolve('OK!');
-}, 1000);
+	setTimeout(_ => {
+		let ran = Math.random();
+		console.log(ran);
+		if (ran < 0.5) {
+			reject('NO!');
+			return;
+		}
+		resolve('OK!');
+	}, 1000);
 });
 // THEN：设置成功或者失败后处理的方法
 Promise.prototype.then([resolvedFn],[rejectedFn])
@@ -178,14 +179,15 @@ new Promise((resolve,reject)=>{
 THEN方法结束都会返回一个新的Promise实例（THEN链）  
 
 *   [[PromiseStatus]]:'pending'
-*   [[PromiseValue]]:undefined
-p1这个new Promise出来的实例，成功或者失败，取决于executor函数执行的时候，执行的是resolve还是reject决定的，再或者executor函数执行发生异常错误，也是会把实例状态改为失败的  
-p2/p3这种每一次执行then返回的新实例的状态，由then中存储的方法执行的结果来决定最后的状态（上一个THEN中某个方法执行的结果，决定下一个then中哪一个方法会被执行）  
- 不论是成功的方法执行，还是失败的方法执行（THEN中的两个方法），凡是执行抛出了异常，则都会把实例的状态改为失败  
+*   [[PromiseValue]]:undefined  
 
-方法中如果返回一个新的PROMISE实例，返回这个实例的结果是成功还是失败，也决定了当前实例是成功还是失败  
+1. p1这个new Promise出来的实例，成功或者失败，取决于executor函数执行的时候，执行的是resolve还是reject决定的，再或者executor函数执行发生异常错误，也是会把实例状态改为失败的  
+2. p2/p3这种每一次执行then返回的新实例的状态，由then中存储的方法执行的结果来决定最后的状态（上一个THEN中某个方法执行的结果，决定下一个then中哪一个方法会被执行）  
+3. 不论是成功的方法执行，还是失败的方法执行（THEN中的两个方法），凡是执行抛出了异常，则都会把实例的状态改为失败  
 
-剩下的情况基本上都是让实例变为成功的状态 （方法返回的结果是当前实例的value值：上一个then中方法返回的结果会传递到下一个then的方法中）
+4. 方法中如果返回一个新的PROMISE实例，返回这个实例的结果是成功还是失败，也决定了当前实例是成功还是失败  
+
+5. 剩下的情况基本上都是让实例变为成功的状态 （方法返回的结果是当前实例的value值：上一个then中方法返回的结果会传递到下一个then的方法中）
 ```js
 let p1 = new Promise((resolve, reject) => {
 	resolve(100);
@@ -212,7 +214,7 @@ new Promise(resolve =>{
 },reason=>{
 	console.log('失败:'+reason)
 }).then(result = >{
-	console.log('成功:'+result); //成功undefined 上一个reason里没有返回结果所以值是undefined
+	console.log('成功:'+result); //成功undefined 上一个reason里没有返回return结果所以值是undefined
 },reason=>{
 	console.log('失败:'+reason)
 })

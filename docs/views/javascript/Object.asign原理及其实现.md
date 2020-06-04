@@ -272,3 +272,26 @@ for (var nextKey in nextSource) {
     }
 }
 ```
+
+## 深拷贝
+```js
+function _deepClone(obj) {
+			// 如果是null直接返回null
+			if (obj === null) return null;
+			// 如果是基本数据值或者函数，也直接返回即可（函数无需克隆处理）
+			if (typeof obj !== 'object') return obj;
+			// 如果是正则
+			if (_type(obj) === '[object RegExp]') return new RegExp(obj);
+			// 如果是日期格式的数据
+			if (_type(obj) === '[object Date]') return new Date(obj);
+
+			// obj.constructor：找到的是所属类原型上的constructor，而原型上的constructor指向的是当前类本身 =>保证传递进来什么类型的值，我们最后创建的newObj也是对应类型的
+			let newObj = new obj.constructor;
+			for (let key in obj) {
+				if (!obj.hasOwnProperty(key)) break;
+				// 如果某一项的值是引用值吗，我们还需要进一步迭代循环，把引用值中的每一项也进一步克隆 =>深度克隆
+				newObj[key] = _deepClone(obj[key]);
+			}
+			return newObj;
+		}
+```

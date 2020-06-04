@@ -151,4 +151,235 @@ xhr.onreadystatechange = function () {
 xhr.send();  //任务为4的时候主栈才结束
 
 ```
+* 阶段1：服务器渲染
+* 阶段2：客户端渲染（同源策略）
+* 阶段3：客户端渲染（跨域方案）
+* 阶段4：半服务器渲染 SSR  
 
+ajax存在的意义是局部刷新提高性能  
+
+* ajax的核心操作
+
+* $.ajax的封装
+
+* axios的封装
+
+* axios的二次配置
+
+* fetch的处理和封装
+```js
+//ajax的四步操作
+let xhr =  new XMLHttpRequest
+xhr.open('get', './js/fastclick.js', true);
+xhr.onreadystatechange = function () {
+	if(/^2\d{2}$/.test(xhr.status)&&xhr.readyState===4){
+		console.log(xhr.responseText)
+	}
+}; 
+xhr.send()
+```
+```js
+//自己封装一个ajax JQ就是这种包含了超时的设置请求头的设置data格式的设置等等
+ajax({
+	url:'http://127.0.0.1:8888/user/list',
+	method:'get'
+	data:{}
+	success:function(result){console.log(sesult)}
+})
+---------------------------------------
+const qs = require('qs');//处理xxx=xxx&xxx=xxx
+export default function ajax(option = {}) {
+	option = Object.assign({
+		url: '',
+		method: 'get',
+		data: null,
+		success: null
+	}, option);
+	//get请求基于问号参数传递服务器
+	//post请求基于请求主体传递给服务器
+	option.data = qs.stringify(option.data); //x-www-form-urlencoded
+	let isGET = /^(GET|DELETE|HEAD|OPTIONS)$/i.test(option.method);
+	if (isGET && option.data) {
+		let char = option.url.includes('?') ? '&' : '?';//有的url可能已经带问号了
+		option.url += `${char}${option.data}`;
+		option.data = null;//get请求的data已经在url里了
+	}
+
+	// 发送请求
+	let xhr = new XMLHttpRequest;
+	xhr.open(option.method, option.url);
+	xhr.onreadystatechange = function () {
+		if (/^2\d{2}$/.test(xhr.status) && xhr.readyState === 4) {
+			// 成功从服务器获取结果 responseText是 JSON字符串
+			typeof option.success === "function" ? option.success(JSON.parse(xhr.responseText)) : null;
+		}
+	};
+	xhr.send(option.data);
+}
+```
+```js
+//JQ ajax会回调地狱 之后很长一段时间都在用Promise把ajax包起来
+new Promise((resolve = >{
+	ajax({
+	url:'http://127.0.0.1:8888/user/list',
+	method:'get'
+	data:{}
+	success:function(result){
+		resolve(result)
+		}
+})
+})).then()
+//或者用Promise二次封装jqajax库 
+//或者自己封装一个Promise版本ajax库(简易版的axios)
+const qs = require('qs');
+
+function ajax(option = {}) {
+	option = Object.assign({
+		url: '',
+		method: 'get',
+		data: null
+	}, option);
+
+	option.data = qs.stringify(option.data);
+	let isGET = /^(GET|DELETE|HEAD|OPTIONS)$/i.test(option.method);
+	if (isGET && option.data) {
+		let char = option.url.includes('?') ? '&' : '?';
+		option.url += `${char}${option.data}`;
+		option.data = null;
+	}
+
+	return new Promise((resolve, reject) => {
+		let xhr = new XMLHttpRequest;
+		xhr.open(option.method, option.url);
+		xhr.onreadystatechange = function () {
+			if (!/^2\d{2}$/.test(xhr.status)) {
+				reject(xhr);
+				return;
+			}
+			if (xhr.readyState === 4) {
+				resolve(JSON.parse(xhr.responseText));
+			}
+		};
+		xhr.send(option.data);
+	});
+}
+
+['get', 'post', 'delete', 'put', 'head', 'options'].forEach(item => {
+	ajax[item] = function (url = '', data = {}) {
+		return ajax({
+			url,
+			method: item,
+			data
+		});
+	};
+});
+
+export default ajax;
+------------------------------------------------------------------------
+使用
+function getUser() {
+	return ajax.get('/user/list');
+}
+
+function getJob() {
+	return ajax.get('/job/list');
+}
+
+function userLogin() {
+	return ajax.post('/user/login', {
+		account: '',
+		password: ''
+	});
+}
+(function () {
+    getUser().then(result => {
+		console.log("1=>", result);
+		return getJob();
+	}).then(result => {
+		console.log("2=>", result);
+		return userLogin();
+	}).then(result => {
+		console.log("3=>", result);
+	}); 
+
+})();
+
+终极 用async await
+	let result = await getUser();
+	console.log("1=>", result);
+
+	result = await getJob();
+	console.log("2=>", result);
+
+	result = await userLogin();
+	console.log("3=>", result);
+```
+```js
+//axios的二次封装 主要的是请求拦截器和响应拦截器
+import axios from 'axios';
+import qs from 'qs';
+
+axios.defaults.baseURL = "http://127.0.0.1:8888";
+axios.defaults.headers['Content-Type'] = "application/x-www-form-urlencoded";
+axios.defaults.transformRequest = data => qs.stringify(data);
+axios.defaults.timeout = 0;
+axios.defaults.withCredentials = true;
+
+axios.interceptors.request.use(config => {
+	// 真实项目中，我们一般会在登录成功后，把从服务器获取的TOKEN信息存储到本地，以后再发送请求的时候，一般都把TOKEN带上（自定义请求头携带）
+	let token = localStorage.getItem('token');
+	token && (config.headers['Authorization'] = token);
+	return config;
+});
+
+axios.interceptors.response.use(response => {
+	return response.data;
+}, reason => {
+	// 从服务器没有获取数据（网络层失败）
+	let response = null;
+	if (reason) {
+		// 起码服务器有响应，只不过状态码是4/5开头的
+		response = reason.response;
+		switch (response.status) {
+			case 401:
+				// 一般情况下都是未登录
+				break;
+			case 403:
+				// 一般情况下是TOKEN过期
+				break;
+			case 404:
+				// 地址不存在
+				break;
+		}
+	} else {
+		if (!window.navigator.onLine) {
+			alert('和抱歉，网络连接已经断开，请联网后再试~~');
+		}
+	}
+	return Promise.reject(response);
+});
+
+export default axios;
+
+```
+
+```js
+终极方案 
+fetch是浏览器内置的函数，
+基于fetch可以向服务器发送请求，
+核心原理和AJAX XMLHttpRequest 不一致
+fetch（天生就是基于PROMISE管理的）
+fetch('/user/login', {
+	method: 'post'
+}).then(response => {
+	return response.json();
+}).then(result => {
+	console.log(result);
+});
+不论服务器返回的状态码是多少，都按照PROMISE成功算；只有断网，才算失败
+fetch没有axios那样的拦截器所以我们要自己封装
+
+
+```
+## axios fetch封装
+[AjaxAxiosFetch](./AjaxAxiosFetch的封装.md)
