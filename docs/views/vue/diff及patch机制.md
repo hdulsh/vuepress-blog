@@ -383,7 +383,7 @@ function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly
       }
     }
     if (oldStartIdx > oldEndIdx) {
-      refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
+      refElm = isUndf(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
     } else if (newStartIdx > newEndIdx) {
       removeVnodes(oldCh, oldStartIdx, oldEndIdx)
@@ -412,9 +412,16 @@ oldKeyToIdx 是一个map，其中key就是常在for循环中写的v-bind:key的�
 * 如果没有找到相同的节点，则通过 `createElm` 创建一个新节点，并将 `newStartIdx` 向后移动一位。
 
 * 否则如果找到了节点，同时它符合 sameVnode，则将这两个节点进行 `patchVnode`，将该位置的老节点赋值 undefined（之后如果还有新节点与该节点key相同可以检测出来提示已有重复的 key ），同时将 `newStartVnode.elm` 插入到 `oldStartVnode.elm `的前面。同理，newStartIdx 往后移动一位。
-如果不符合 sameVnode，则通过 `createElm` 创建一个新节点，并将 `newStartIdx` 向后移动一位。
+如果不符合 sameVnode，则通过 `createElm` 创建一个新节点，插入到`oldStartVnode.elm` 前，并将 `newStartIdx` 向后移动一位。
 
 6. 最后一步就很容易啦，当 while 循环结束以后，如果 oldStartIdx > oldEndIdx，说明老节点比对完了，但是新节点还有多的，需要将新节点插入到真实 DOM 中去，调用 addVnodes 将这些节点插入即可。
+```js
+function addVnodes (parentElm, refElm, vnodes, startIdx, endIdx, insertedVnodeQueue) {
+    for (; startIdx <= endIdx; ++startIdx) {
+      createElm(vnodes[startIdx], insertedVnodeQueue, parentElm, refElm, false, vnodes, startIdx)
+    }
+  }
+```
 同理，如果满足 newStartIdx > newEndIdx 条件，说明新节点比对完了，老节点还有多，将这些无用的老节点通过 removeVnodes 批量删除即可。
 
 ![](https://resource.limeili.co/image/20200619004043.png)
@@ -422,4 +429,15 @@ oldKeyToIdx 是一个map，其中key就是常在for循环中写的v-bind:key的�
 ![](https://resource.limeili.co/image/20200619004144.png)
 ![](https://resource.limeili.co/image/20200619004204.png)
 ![](https://resource.limeili.co/image/20200619004349.png)
+
+* oldCh和ch在过程中他们的位置并不会发生变化
+* 真正进行操作的是进入updateChildren传入的parentElm，即父vnode的elm
+* 多次提到patchVnode，往前看patchVnode的部分，其处理的结果就是oldVnode.elm和vnode.elm得到了更新
+* 有多次的原生的dom的操作，insertBefore,重点是要先找到插入的地方
+
+`insertedVnodeQueue有何用？为啥一直带着？`
+insertedVnodeQueue记录子节点创建顺序的队列，每创建一个dom元素就会往队列中插入当前的vnode，当整个vnode对象全部转换成为真实的dom 树时，会依次调用这个队列中vnode hook的insert方法
+这部分涉及到组件的patch的过程，这里可以简单说下：组件的$mount函数之后之后并不会立即触发组件实例的mounted钩子，而是把当前实例push到insertedVnodeQueue中，然后在patch的倒数第二行，会执行invokeInsertHook，也就是触发所有组件实例的insert的钩子，而组件的insert钩子函数中才会触发组件实例的mounted钩子。比方说，在patch的过程中，patch了多个组件vnode，他们都进行了$mount即生成dom，但没有立即触发$mounted，而是等整个patch完成，再逐一触发。
+
+
 [1](https://www.jianshu.com/p/c90850991026)
