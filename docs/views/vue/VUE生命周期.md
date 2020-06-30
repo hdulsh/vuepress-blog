@@ -72,7 +72,7 @@ Vue会将props对象变成一个响应式对象，并且第四个参数是一个
 初始化watch的时候最终会调用$watch方法，生成一个user watcher，当监听的属性发生改变就会立即通知user watcher执行回调
 
 ### created
-再调用initProvide初始化provide后就会执行callHook(vm, 'beforeCreate'),和beforeCreate一样，依次遍历定义在$options上的created数组，执行生命周期函数
+再调用initProvide初始化provide后就会执行callHook(vm, 'Created'),和beforeCreate一样，依次遍历定义在$options上的created数组，执行生命周期函数
 至此整个组件创建完毕，其实这个时候就可以和后端进行交互获取数据了，但是对于真正的DOM节点还没有被渲染出来，一些需要和DOM的交互操作还无法在created钩子中执行，即无法在created钩子中有操作生成视图的DOM
 
 

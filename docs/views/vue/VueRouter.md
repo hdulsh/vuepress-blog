@@ -59,7 +59,7 @@ const router = new VueRouter({
  
 * 声明式`<router-link :to="...">`  
 * 编程式`router.push(...)`  
-当你点击 <router-link> 时，这个方法会在内部调用，所以说，点击 <router-link :to="..."> 等同于调用 router.push(...)  
+当你点击 `<router-link>` 时，这个方法会在内部调用，所以说，点击 `<router-link :to="..."> `等同于调用 router.push(...)  
 ```js
 // 字符串
 router.push('home')

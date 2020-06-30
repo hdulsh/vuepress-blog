@@ -270,6 +270,37 @@ Vue.js 利用 `_createElement` 方法创建 VNode
 
 `_createElement 方法有 5 个参数，context 表示 VNode 的上下文环境，它是 Component 类型；tag表示标签，它可以是一个字符串，也可以是一个 Component；data 表示 VNode 的数据，它是一个 VNodeData 类型，可以在 flow/vnode.js 中找到它的定义；children 表示当前 VNode 的子节点，它是任意类型的，需要被规范为标准的 VNode 数组`
 
+```js
+function createElement(tag,data,...children){ 
+    let key = data.key; 
+    delete data.key; 
+    children = children.map(child=>{ 
+        if(typeof child === 'object')
+        //如果是对象说明又用了createElement方法
+            { return child }
+        else
+            {return vnode(undefined,undefined,undefined,undefined,child) } })
+    return vnode(tag,data,key,children); 
+}
+function vnode(tag,data,key,children,text){ 
+    return { 
+        tag, // 表示的是当前的标签名 
+        data, // 表示的是当前标签上的属性 
+        key, // 唯一表示用户可能传递 
+        children, 
+        text } 
+}
+createElement('div',{id:'container'},createElement('p',{},'hello'),'zzzz')
+
+tag: "div"
+data: {id: "container"}
+key: undefined
+children: 
+   {tag: "p", data: {…}, key: undefined, children: Array(1), text: undefined}
+   {tag: undefined, data: undefined, key: undefined, children: undefined, text: "zzzz"}
+text: undefined
+
+```
 ### 实例查看
 
 ```js

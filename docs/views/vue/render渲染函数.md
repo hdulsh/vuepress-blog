@@ -1,5 +1,5 @@
 ---
-title: render渲染函数
+title: render渲染函数和vue渲染机制
 date: 2019-08-26
 tags:
  - VUE
@@ -43,7 +43,7 @@ createElement 到底会返回什么呢？其实不是一个实际的 DOM 元素�
 ![](https://resource.limeili.co/image/201909052051.webp!png)
 
 在创建一个vue实例的时候(var vm = new Vue(options))。Vue的构造函数将自动运行 this._
-init（启动函数）。启动函数的最后一步为initRender(vm)
+init（启动函数）
 ```js
 // Vue.prototype._init
     ...
@@ -52,14 +52,11 @@ init（启动函数）。启动函数的最后一步为initRender(vm)
     callHook(vm, 'beforeCreate');
     initState(vm);
     callHook(vm, 'created');
-    initRender(vm);
-```
-initRender中调用vm.mount(vm.options.el)
-```js
- if (vm.$options.el) {
+    if (vm.$options.el) {
     vm.$mount(vm.$options.el);
   }
 ```
+
 将实例挂载到dom上，至此启动函数完成。
 若Vue实例上面没有el属性，则生命周期执行到这就挂起了，直到手动去执行vm.mount(el)，生命周期才会继续执行
 ![](https://resource.limeili.co/image/201909052052.webp!png)
