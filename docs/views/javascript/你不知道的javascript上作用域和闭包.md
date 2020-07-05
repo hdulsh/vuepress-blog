@@ -4,6 +4,8 @@ date: 2020-03-09
 tags:
  - 你不知道的javascript
  - 变量提升
+ - 作用域
+ - 闭包
 categories:
  -  JavaScript
 sidebar: auto
@@ -188,7 +190,13 @@ console.log( err ); // ReferenceError: err not found
 `变量提升的原因`
 :point_right: [点击这里](../javascript/理解Javascript执行上下文和执行栈.md) :point_left:
   
+`条件判断下的变量提升`  
 
+在当前作用域下不管条件是否成立都要进行变量提升，  
+
+带var的还是只声明  
+
+带Function的在老版本浏览器的渲染机制下，声明和定义都处理，但是为了迎合es6中的块作用域，新版本浏览器对于函数（在条件判断中的函数）不管条件是否成立，都只是先声明，没有定义 类似于var
 
 
 ```js

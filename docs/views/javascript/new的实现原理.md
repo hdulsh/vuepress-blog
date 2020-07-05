@@ -1,8 +1,8 @@
 ---
-title: 面向对象编程概述和new的实现原理
+title: new的实现原理
 date: 2020-03-09
 tags:
- - new的原理
+ - new
  - 面向对象
 categories:
  -  JavaScript

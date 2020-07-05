@@ -195,3 +195,33 @@ for (var v of myObject) {
 // 3
 ```
 我们使用 Object.defineProperty(..) 定义了我们自己的@@iterator（主要是为了让它不可枚举），不过注意，我们把符号当作可计算属性名。此外，也可以直接在定义对象时进行声明，比如 var myObject = { a:2, b:3, [Symbol.iterator]: function() { /* .. */ } }。
+
+## 对象上的方法
+* getOwnPropertyDescriptor
+* getOwnPropertyDescriptors
+* getOwnPropertyNames
+* getOwnPropertySymbols
+* is
+* preventExtensions
+* seal
+* create
+* defineProperties
+* defineProperty
+* freeze
+* getPrototypeOf
+* setPrototypeOf
+* isExtensible
+* isFrozen
+* isSealed
+* keys
+* entries
+* fromEntries
+* values
+
+## 对象原型上的方法
+* hasOwnProperty
+* isPrototypeOf
+* propertyIsEnumerable
+* toString
+* valueOf
+* toLocaleString

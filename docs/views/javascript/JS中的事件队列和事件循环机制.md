@@ -383,3 +383,57 @@ fetch没有axios那样的拦截器所以我们要自己封装
 ```
 ## axios fetch封装
 [AjaxAxiosFetch](./AjaxAxiosFetch的封装.md)
+
+
+## 同步异步编程
+```js
+async function async1() {
+    console.log('async1 start');
+    await async2();
+    console.log('async1 end');
+}
+async function async2() {
+    console.log('async2');
+}
+console.log('script start');
+setTimeout(function() {
+    console.log('setTimeout');
+}, 0)
+async1();
+new Promise(function(resolve) {
+    console.log('promise1');
+    resolve();
+}).then(function() {
+    console.log('promise2');
+});
+console.log('script end');
+```
+![](https://resource.limeili.co/image/202007031808.png)
+
+```js
+console.log(1);
+setTimeout(_ => { console.log(2); }, 1000);
+async function fn() {
+	console.log(3);
+	setTimeout(_ => {  console.log(4); }, 20);
+	return Promise.reject();
+}
+async function run() {
+	console.log(5);
+	await fn();
+	console.log(6);
+}
+run();
+// 需要执行150MS左右
+for (let i = 0; i < 90000000; i++) {}
+setTimeout(_ => {
+	console.log(7);
+	new Promise(resolve => {
+		console.log(8);
+		resolve();
+	}).then(_ => { console.log(9); });
+}, 0);
+console.log(10);
+//1531047892
+```
+![](https://resource.limeili.co/image/202007031826.png)

@@ -3,6 +3,10 @@ title: 《你不知道的javascript(上)》this全面解析
 date: 2020-03-09
 tags:
  - 你不知道的javascript
+ - this
+ - call
+ - apply
+ - bind
 categories:
  - JavaScript
 sidebar: auto
@@ -810,7 +814,7 @@ fn1.call.call(fn2); //=>执行的是Fn2 =>2
     * fn2.$fn=AAAFFF000  fn2.$fn(...[])相当于让AAAFFF000执行
     *
     * 让CALL方法再执行
-    *    this=>fn2
+    *    this=>fn2 因为上一步中fn2.$fn(...[])
     *    context=>undefined
     *    args=>[]
     * undefined.$fn=fn2  undefined.$fn() 相当于让fn2执行
