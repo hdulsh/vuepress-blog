@@ -54,7 +54,7 @@ function compose(...funcs) {
             return funcs[0](...args);
         }
         return funcs.reduce((x, y) => {
-            return typeof x === "function" ? y(x(...args)) : y(x);
+            return typeof x === "function" ? y(x(...args)) : y(x);// x除了第一次是一个函数 剩下都是上一次处理的结果
         });
     };
 }
