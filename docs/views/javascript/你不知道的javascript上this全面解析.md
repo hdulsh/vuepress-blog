@@ -623,7 +623,9 @@ console.log('toString' in obj); //=>true
 		let f = new Fn; //加不加()都行
 ```
 ## 4. 箭头函数
-箭头函数中没有自身的THIS，所用到的THIS都是其上下文中的THIS 
+箭头函数中没有自身的THIS，所用到的THIS都是其上下文中的THIS   
+但是要是在箭头函数里使用this，他就会往上一级作用域查找，如果上一级作用域也没有，那就继续往上找，直到找到全局的window为止  
+
 *   箭头函数没有的东西很多：
 *      1.他没有prototype（也就是没有构造器），所以不能被new执行
 *      2.他没有arguments实参集合（可以基于...args剩余运算符获取）
