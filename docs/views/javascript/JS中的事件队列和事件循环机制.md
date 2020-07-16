@@ -24,7 +24,68 @@ JS本身是单线程的（浏览器只分配一个线程供JS代码自上而下�
 + setImmediate
 + FS进行I/O操作可以是异步操作  
 **JS中异步操作的运行机制：事件队列 Event Queue 和 事件循环 Event Loop**
-![](https://resource.limeili.co/image/202005281847.png)
+![](https://resource.limeili.co/image/202005281847.png)  
+Javascript单线程任务被分为同步任务和异步任务，同步任务会在调用栈中按照顺序等待主线程依次执行，异步任务会在异步任务有了结果后，将注册的回调函数放入任务队列中等待主线程空闲的时候（调用栈被清空），被读取到栈内等待主线程的执行。  
+* 同步和异步任务分别进入不同的执行"场所"，同步的进入主线程，异步的进入Event Table并注册函数。
+* 当指定的事情完成时，Event Table会将这个函数移入Event Queue。
+* 主线程内的任务执行完毕为空，会去Event Queue读取对应的函数，进入主线程执行。
+* 上述过程会不断重复，也就是常说的Event Loop(事件循环)。
+```js
+setTimeout(() => {
+    task()
+},3000)
+
+sleep(10000000)
+
+- task()进入Event Table并注册,计时开始。
+- 执行sleep函数，很慢，非常慢，计时仍在继续。
+- 3秒到了，计时事件timeout完成，task()进入Event Queue，- 但是sleep也太慢了吧，还没执行完，只好等着。
+- sleep终于执行完了，task()终于从Event Queue进入了主线程执行。
+
+```
+```js
+console.log('1');
+
+setTimeout(function() {
+    console.log('2');
+    process.nextTick(function() {
+        console.log('3');
+    })
+    new Promise(function(resolve) {
+        console.log('4');
+        resolve();
+    }).then(function() {
+        console.log('5')
+    })
+})
+process.nextTick(function() {
+    console.log('6');
+})
+new Promise(function(resolve) {
+    console.log('7');
+    resolve();
+}).then(function() {
+    console.log('8')
+})
+
+setTimeout(function() {
+    console.log('9');
+    process.nextTick(function() {
+        console.log('10');
+    })
+    new Promise(function(resolve) {
+        console.log('11');
+        resolve();
+    }).then(function() {
+        console.log('12')
+    })
+})
+//1，7，6，8，2，4，3，5，9，11，10，12。
+
+```
+
+
+
 ```js
 setTimeout(() => {
     console.log(1);
