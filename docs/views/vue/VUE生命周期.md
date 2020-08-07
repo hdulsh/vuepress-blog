@@ -16,6 +16,8 @@ sidebar: auto
 对于Vue来说它的生命周期就是Vue实例从创建到销毁的过程
 创建->挂载->更新->销毁
 
+![](https://resource.limeili.co/image/20200617225656.png)
+
 ![](https://resource.limeili.co/image/201910041820.png)
 
 `new Vue()`实例化Vue对象然后进行一些初始化
@@ -114,9 +116,10 @@ $mount最终会执行mountComponent这个函数
 watcher顾名思义是用来观察的，渲染watcher简而言之，就是会观察模版中依赖变量的是否变化来决定是否需要刷新页面，而updateComponet就是一个用来更新页面的函数，所以将这个函数作为回调传入。对于模版中的响应式变量内部都会保存这个渲染watcher（因为这些变量都有可能修改视图），一旦变量被修改了就会触发setter，最后都会再次执行updateComponent函数来刷新视图
 
 #### mounted
-watcher顾名思义是用来观察的，渲染watcher简而言之，就是会观察模版中依赖变量的是否变化来决定是否需要刷新页面，而updateComponet就是一个用来更新页面的函数，所以将这个函数作为回调传入。对于模版中的响应式变量(下图中的变量a)内部都会保存这个渲染watcher（因为这些变量都有可能修改视图），一旦变量被修改了就会触发setter，最后都会再次执行updateComponent函数来刷新视图
+实例化渲染watcher渲染出页面后会进入一个判断，这里要注意的是，只有根实例才会为true并且触发mounted钩子，那组件实例什么时候触发mounted钩子呢？
 
-，在src/core/vdom/create-component.js的insert钩子（组件专属的vnode钩子）,同时Vue会声明一个insertedVnodeQueue数组，保存所有的组件vnode，每当一个组件vnode被渲染成DOM节点就会往这个数组里添加一个vnode元素，当组件全部渲染完毕后，会以子=>父的顺序依次触发mounted钩子（最先触发最里层组件的mounted钩子）。随后再回到_init方法，最后触发根实例的mounted钩子
+这里先给出答案，在src/core/vdom/create-component.js的insert钩子（组件专属的vnode钩子）,同时Vue会声明一个insertedVnodeQueue数组，保存所有的组件vnode，每当一个组件vnode被渲染成DOM节点就会往这个数组里添加一个vnode元素，当组件全部渲染完毕后，会以子=>父的顺序依次触发mounted钩子（最先触发最里层组件的mounted钩子）。随后再回到_init方法，最后触发根实例的mounted钩子
+
 
 ![](https://resource.limeili.co/image/201910042200.png)
 
@@ -141,14 +144,24 @@ Vue会将所有的watcher放入一个队列，`flushSchedulerQueue`会依次遍�
 
 至此整个Vue的生命周期结束了，最后再总结一下每个生命周期主要都做了什么事情，严格按照Vue内部的执行顺序罗列
 
-* `beforeCreate`:将开发者定义的配置项和Vue内部的配置项进行合并，初始化组件的自定义事件，定义createElement函数/初始化插槽
-* `created`:初始化inject，初始化所有数据（props -> methods -> data -> computed -> watch），初始化provide
-* `beforeMount`:寻找是否有挂载的节点，根据render函数准备开始渲染页面/实例化渲染watcher
-* mounted`:页面渲染完成
-* `beforeUpdate`:渲染watcher依赖的变量发生变化，准备更新视图
-* `updated`:视图和数据全部更新完毕
-* `beforeDestroy`:注销watcher，删除DOM节点
-* `destroyed`:注销所有监听事件
+要掌握每个生命周期什么时候被调用
+* beforeCreate 在实例初始化之后，数据观测(data observer) 之前被调用。
+* created 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data
+ observer)，属性和方法的运算， watch/event 事件回调。这里没有$el
+* beforeMount 在挂载开始之前被调用：相关的 render 函数首次被调用。
+* mounted el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。
+* beforeUpdate 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
+* updated 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子。
+* beforeDestroy 实例销毁之前调用。在这一步，实例仍然完全可用。
+* destroyed Vue 实例销毁后调用。调用后， Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。 该钩子在服务器端渲染期间不被调用。  
+
+要掌握每个生命周期内部可以做什么事
+
+* created 实例已经创建完成，因为它是最早触发的原因可以进行一些数据，资源的请求。
+* mounted 实例已经挂载完成，可以进行一些DOM操作
+* beforeUpdate 可以在这个钩子中进一步地更改状态，这不会触发附加的重渲染过程。
+* updated 可以执行依赖于 DOM 的操作。然而在大多数情况下，你应该避免在此期间更改状态，因为这可能会导致更新无限循环。 该钩子在服务器端渲染期间不被调用。
+* beforedestroy可以执行一些优化操作,清空定时器，解除绑定事件
 
 
 ## 父子组件生命周期
